@@ -1,0 +1,14 @@
+# Secrets - prevent accidental commits
+*secret* filter=git-crypt diff=git-crypt
+secrets filter=git-crypt diff=git-crypt
+*.key filter=git-crypt diff=git-crypt
+*.pem filter=git-crypt diff=git-crypt
+
+secret filter=git-crypt diff=git-crypt
+*vault* filter=git-crypt diff=git-crypt
+vault filter=git-crypt diff=git-crypt
+
+# Terraform variable files - prevent accidental commits of sensitive data
+*.tfvars filter=git-crypt diff=git-crypt
+**/*.tfvars filter=git-crypt diff=git-crypt
+.tfvars filter=git-crypt diff=git-crypt

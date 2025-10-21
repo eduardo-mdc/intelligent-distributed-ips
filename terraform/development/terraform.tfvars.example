@@ -1,0 +1,78 @@
+# Proxmox Connection Settings
+proxmox_endpoint = "https://proxmox.example.com:8006"
+proxmox_insecure = true  # Set to false if using valid TLS certificates
+
+# Authentication - Option 1: API Token (Recommended)
+proxmox_api_token = "terraform@pam!mytoken=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+# Authentication - Option 2: Username/Password (Alternative)
+# proxmox_username = "terraform@pam"
+# proxmox_password = "your-password-here"
+
+# Default VM Settings
+default_proxmox_node  = "pve"
+default_template_vm_id = 9000  # VM ID of your template
+
+# SSH Keys for VMs
+default_ssh_keys = [
+  "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC... user@host"
+]
+
+# VM Configurations
+vms = {
+  # Example 1: Web server with custom resources
+  web = {
+    vm_name = "web-server"
+    cores   = 4
+    memory  = 4096
+    disk_size = 50
+
+    # Static IP
+    use_dhcp   = false
+    ip_address = "192.168.1.100"
+    ip_cidr    = "24"
+    gateway    = "192.168.1.1"
+
+    tags = ["web", "production"]
+  }
+
+  # Example 2: Database server with larger disk
+  db = {
+    vm_name   = "db-server"
+    cores     = 4
+    memory    = 8192
+    disk_size = 100
+
+    use_dhcp   = false
+    ip_address = "192.168.1.101"
+    ip_cidr    = "24"
+    gateway    = "192.168.1.1"
+
+    tags = ["database", "production"]
+  }
+
+  # Example 3: Worker node with defaults (DHCP, 2 cores, 2GB RAM)
+  worker = {
+    vm_name = "worker-node"
+    tags    = ["worker"]
+  }
+
+  # Example 4: Custom template
+  # custom = {
+  #   vm_name        = "custom-vm"
+  #   template_vm_id = 9001  # Different template
+  #   cores          = 2
+  #   memory         = 2048
+  # }
+
+  # Example 5: VM from cloud image (uncomment image download resource in main.tf)
+  # ubuntu_iso = {
+  #   vm_name          = "ubuntu-from-image"
+  #   template_vm_id   = null  # Don't clone
+  #   disk_import_from = "local:iso/jammy-server-cloudimg-amd64.img"
+  #   os_type          = "l26"
+  #   cores            = 2
+  #   memory           = 2048
+  #   tags             = ["ubuntu", "cloud-image"]
+  # }
+}
