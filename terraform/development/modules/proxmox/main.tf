@@ -26,7 +26,7 @@ module "vms" {
   sockets         = coalesce(each.value.sockets, var.default_sockets)
   cpu_type        = coalesce(each.value.cpu_type, var.default_cpu_type)
   memory          = coalesce(each.value.memory, var.default_memory)
-  memory_floating = coalesce(each.value.memory_floating, var.default_memory_floating)
+  memory_floating = each.value.memory_floating != null ? each.value.memory_floating : var.default_memory_floating
 
   # Disk configuration
   disk_storage     = coalesce(each.value.disk_storage, var.default_disk_storage)
@@ -41,19 +41,19 @@ module "vms" {
 
   # IP configuration
   use_dhcp   = coalesce(each.value.use_dhcp, var.default_use_dhcp)
-  ip_address = coalesce(each.value.ip_address, "")
+  ip_address = each.value.ip_address != null ? each.value.ip_address : ""
   ip_cidr    = coalesce(each.value.ip_cidr, var.default_ip_cidr)
-  gateway    = coalesce(each.value.gateway, var.default_gateway)
+  gateway    = each.value.gateway != null ? each.value.gateway : var.default_gateway
 
   # Cloud-init configuration
-  cloud_init_datastore_id    = coalesce(each.value.cloud_init_datastore_id, var.default_cloud_init_datastore_id)
-  cloud_init_user            = coalesce(each.value.cloud_init_user, var.default_cloud_init_user)
-  cloud_init_password        = coalesce(each.value.cloud_init_password, var.default_cloud_init_password)
-  ssh_keys                   = coalesce(each.value.ssh_keys, var.default_ssh_keys)
+  cloud_init_datastore_id      = each.value.cloud_init_datastore_id != null ? each.value.cloud_init_datastore_id : var.default_cloud_init_datastore_id
+  cloud_init_user              = coalesce(each.value.cloud_init_user, var.default_cloud_init_user)
+  cloud_init_password          = each.value.cloud_init_password != null ? each.value.cloud_init_password : var.default_cloud_init_password
+  ssh_keys                     = coalesce(each.value.ssh_keys, var.default_ssh_keys)
   cloud_init_user_data_file_id = each.value.cloud_init_user_data_file_id
 
   # Operating system
-  os_type = coalesce(each.value.os_type, var.default_os_type)
+  os_type = each.value.os_type != null ? each.value.os_type : var.default_os_type
 
   # Additional settings
   started            = coalesce(each.value.started, var.default_started)

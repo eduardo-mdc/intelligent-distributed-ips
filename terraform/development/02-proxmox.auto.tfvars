@@ -1,30 +1,20 @@
-# Proxmox Connection Settings
-proxmox_endpoint = "https://proxmox.example.com:8006"
-proxmox_insecure = true  # Set to false if using valid TLS certificates
-
-# Authentication - Option 1: API Token (Recommended)
-proxmox_api_token = "terraform@pam!mytoken=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-
-# Authentication - Option 2: Username/Password (Alternative)
-# proxmox_username = "terraform@pam"
-# proxmox_password = "your-password-here"
 
 # Default VM Settings
-default_proxmox_node  = "pve"
-default_template_vm_id = 9000  # VM ID of your template
+default_proxmox_node   = "pve"
+default_template_vm_id = 9000 # VM ID of your template
 
 # SSH Keys for VMs
 default_ssh_keys = [
-  "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC... user@host"
+  "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC8d/Bg52qrZqSRqdEeqy0rT1+5f/cP5BnsN5GHNQXP7PHe/0pGqADr6tMTboRwE9+q/6YdjzmnpE3qP1xqruh4gkH5GyvsGSuZofBCJuwumQZt91Oxul6Gu04eO2yj1qf2VXcPKbyvOgkbOqtudNMBwR3iZd18ce6Se03srzu1FVo1tPCItkxdRhNyMWbGaU7TS64P+KTSkqK1hkCxPJNz0gs0C+KabKE4glIO5AlXNoAxXAlNfvq0k27TyfJKRZFduN8blOC5owIlR7iyviWBK2FAKMu2/JW8/hFcjdtL8YN3wNcp0u/7KxgqGkPpW21mGtFdsQV4FfvcogLHjnhO5fMjw4iyBp71ZL73AbUj4+LFFfobPu19zpUOcOCUe+CDpwMnW6s5WfolRk8P6a0arQrA7lYfgV815EugPBlyEit89mBSpvaCASrVO8HhnZF3hzbk6DqFt9ePEybqMmFtTHM1M4yYuydDNqNEj5f1/DImRERJxBTi7M6QR7ICtoyksd6x8Sk1TtUp9dVUB4UaIycVG3DnAXILkbsfF+X95hU5vEJw1wuwU26R1JE6HtTXYnrH9Wi0f8RhoS2UXEgmt9V3h/FsGuH/J9U4K7A3XqNBGtIULeL2hi2rAncvD2K49cY95by4gayolLvHJ4bt0Ts8DuNnDcBJ7HzW5AruYw== eduardo.mmd.correia@gmail.com"
 ]
 
 # VM Configurations
 vms = {
   # Example 1: Web server with custom resources
   web = {
-    vm_name = "web-server"
-    cores   = 4
-    memory  = 4096
+    vm_name   = "web-server"
+    cores     = 4
+    memory    = 4096
     disk_size = 50
 
     # Static IP

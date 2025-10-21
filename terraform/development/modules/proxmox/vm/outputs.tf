@@ -1,24 +1,24 @@
 output "vm_id" {
   description = "VM ID"
-  value       = proxmox_vm_qemu.vm.id
+  value       = proxmox_virtual_environment_vm.vm.id
 }
 
 output "vm_name" {
   description = "VM name"
-  value       = proxmox_vm_qemu.vm.name
+  value       = proxmox_virtual_environment_vm.vm.name
 }
 
 output "vm_ipv4_address" {
   description = "VM IPv4 address"
-  value       = proxmox_vm_qemu.vm.default_ipv4_address
+  value       = try(proxmox_virtual_environment_vm.vm.ipv4_addresses[1][0], null)
 }
 
 output "vm_ssh_host" {
   description = "SSH host address"
-  value       = proxmox_vm_qemu.vm.ssh_host
+  value       = try(proxmox_virtual_environment_vm.vm.ipv4_addresses[1][0], null)
 }
 
 output "vm_ssh_port" {
   description = "SSH port"
-  value       = proxmox_vm_qemu.vm.ssh_port
+  value       = 22
 }
