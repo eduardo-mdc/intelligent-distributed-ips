@@ -22,12 +22,11 @@ provider "proxmox" {
   # password = var.proxmox_password
 
   # SSH configuration for file operations
+  # Do: eval $(ssh-agent) & ssh-add ~/.ssh/id_rsa
+  # Before running Terraform to enable SSH agent forwarding
   ssh {
     agent = true
-    # Alternatively, specify credentials:
-    # username = var.proxmox_ssh_username
-    # password = var.proxmox_ssh_password
-    # private_key = file("~/.ssh/id_rsa")
+    username = "root"
   }
 }
 
@@ -39,7 +38,7 @@ module "proxmox_vms" {
   default_target_node    = var.default_proxmox_node
   default_template_vm_id = var.default_template_vm_id
   default_ssh_keys       = var.default_ssh_keys
-  default_tags           = ["terraform","proxmox","vms"]
+  default_tags           = ["terraform", "proxmox", "vms"]
 
   # VM configurations
   vms = var.vms

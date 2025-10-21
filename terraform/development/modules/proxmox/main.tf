@@ -15,7 +15,7 @@ module "vms" {
   vm_id = each.value.vm_id
 
   # Clone or ISO/image install
-  template_vm_id = coalesce(each.value.template_vm_id, var.default_template_vm_id)
+  template_vm_id = each.value.template_vm_id != null ? each.value.template_vm_id : var.default_template_vm_id
   full_clone     = coalesce(each.value.full_clone, var.default_full_clone)
 
   # Stop behavior

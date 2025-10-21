@@ -101,7 +101,7 @@ variable "disk_file_format" {
 }
 
 variable "disk_import_from" {
-  description = "Import disk from file ID (for ISO/image installs, not used when cloning)"
+  description = "Import disk from image file ID (e.g., 'local:import/debian-13-genericcloud-amd64.img') - only used when not cloning from template"
   type        = string
   default     = null
 }
@@ -154,7 +154,7 @@ variable "cloud_init_datastore_id" {
 variable "cloud_init_user" {
   description = "Cloud-init default user"
   type        = string
-  default     = "ubuntu"
+  default     = "root"
 }
 
 variable "cloud_init_password" {
@@ -193,7 +193,7 @@ variable "started" {
 variable "onboot" {
   description = "Start VM on boot"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "qemu_agent_enabled" {

@@ -1,3 +1,26 @@
+# Cloud-init snippet for QEMU agent installation
+resource "proxmox_virtual_environment_file" "cloud_init_user_data" {
+  count = var.qemu_agent_enabled && var.cloud_init_user_data_file_id == null ? 1 : 0
+
+  content_type = "snippets"
+  datastore_id = "local"
+  node_name    = var.target_node
+
+  source_raw {
+    data = <<-EOF
+      #cloud-config
+      package_update: true
+      packages:
+        - qemu-guest-agent
+      runcmd:
+        - systemctl enable qemu-guest-agent
+        - systemctl start qemu-guest-agent
+    EOF
+
+    file_name = "cloud-init-${var.vm_name}.yaml"
+  }
+}
+
 resource "proxmox_virtual_environment_vm" "vm" {
   name        = var.vm_name
   description = var.description
@@ -37,7 +60,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
     size         = var.disk_size
     interface    = var.disk_interface
     file_format  = var.disk_file_format
-    # Import from ISO/image (only if import_from is provided and not cloning)
+    # Import from image file (only used when not cloning from template)
     import_from = var.template_vm_id == null ? var.disk_import_from : null
   }
 
@@ -72,7 +95,10 @@ resource "proxmox_virtual_environment_vm" "vm" {
       keys     = var.ssh_keys
     }
 
-    user_data_file_id = var.cloud_init_user_data_file_id
+    # Use custom user data file if provided, otherwise use auto-generated one for QEMU agent
+    user_data_file_id = var.cloud_init_user_data_file_id != null ? var.cloud_init_user_data_file_id : (
+      var.qemu_agent_enabled ? proxmox_virtual_environment_file.cloud_init_user_data[0].id : null
+    )
   }
 
   # Additional settings

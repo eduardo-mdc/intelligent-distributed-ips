@@ -32,19 +32,7 @@ variable "proxmox_password" {
   default     = null
 }
 
-# SSH Configuration
-variable "proxmox_ssh_username" {
-  description = "SSH username for Proxmox host"
-  type        = string
-  default     = null
-}
-
-variable "proxmox_ssh_password" {
-  description = "SSH password for Proxmox host"
-  type        = string
-  sensitive   = true
-  default     = null
-}
+# SSH Configuratio
 
 # VM Module Defaults
 variable "default_proxmox_node" {
@@ -53,7 +41,7 @@ variable "default_proxmox_node" {
 }
 
 variable "default_template_vm_id" {
-  description = "Default template VM ID to clone from (null for ISO-based installs)"
+  description = "Default template VM ID to clone from (null to create from image file)"
   type        = number
   default     = null
 }

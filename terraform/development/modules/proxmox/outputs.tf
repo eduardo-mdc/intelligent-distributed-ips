@@ -27,11 +27,11 @@ output "vms" {
   description = "Complete map of all VM outputs"
   value = {
     for k, v in module.vms : k => {
-      id              = v.vm_id
-      name            = v.vm_name
-      ipv4_address    = v.vm_ipv4_address
-      ssh_host        = v.vm_ssh_host
-      ssh_port        = v.vm_ssh_port
+      id           = v.vm_id
+      name         = v.vm_name
+      ipv4_address = v.vm_ipv4_address
+      ssh_host     = v.vm_ssh_host
+      ssh_port     = v.vm_ssh_port
     }
   }
 }

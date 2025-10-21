@@ -166,7 +166,7 @@ variable "default_cloud_init_datastore_id" {
 variable "default_cloud_init_user" {
   description = "Default cloud-init user"
   type        = string
-  default     = "ubuntu"
+  default     = "root"
 }
 
 variable "default_cloud_init_password" {
@@ -197,7 +197,7 @@ variable "default_started" {
 variable "default_onboot" {
   description = "Default onboot setting"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "default_qemu_agent_enabled" {
