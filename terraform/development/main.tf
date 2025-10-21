@@ -39,19 +39,8 @@ module "proxmox_vms" {
   default_target_node    = var.default_proxmox_node
   default_template_vm_id = var.default_template_vm_id
   default_ssh_keys       = var.default_ssh_keys
-  default_tags           = ["terraform", "managed"]
+  default_tags           = ["terraform","proxmox","vms"]
 
   # VM configurations
   vms = var.vms
 }
-
-# Example: Download a cloud image for ISO-based VM creation
-# Uncomment to use:
-#
-# resource "proxmox_virtual_environment_download_file" "ubuntu_cloud_image" {
-#   content_type = "iso"
-#   datastore_id = "local"
-#   node_name    = var.default_proxmox_node
-#   url          = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
-#   file_name    = "jammy-server-cloudimg-amd64.img"
-# }

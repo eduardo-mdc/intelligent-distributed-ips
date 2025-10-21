@@ -10,12 +10,11 @@ default_ssh_keys = [
 
 # VM Configurations
 vms = {
-  # Example 1: Web server with custom resources
-  web = {
-    vm_name   = "web-server"
-    cores     = 4
+  ips-protected-server-1 = {
+    vm_name   = "ips-protected-server-1"
+    cores     = 2
     memory    = 4096
-    disk_size = 50
+    disk_size = 30
 
     # Static IP
     use_dhcp   = false
@@ -23,46 +22,7 @@ vms = {
     ip_cidr    = "24"
     gateway    = "192.168.1.1"
 
-    tags = ["web", "production"]
+    tags = ["server", "ips"]
   }
 
-  # Example 2: Database server with larger disk
-  db = {
-    vm_name   = "db-server"
-    cores     = 4
-    memory    = 8192
-    disk_size = 100
-
-    use_dhcp   = false
-    ip_address = "192.168.1.101"
-    ip_cidr    = "24"
-    gateway    = "192.168.1.1"
-
-    tags = ["database", "production"]
-  }
-
-  # Example 3: Worker node with defaults (DHCP, 2 cores, 2GB RAM)
-  worker = {
-    vm_name = "worker-node"
-    tags    = ["worker"]
-  }
-
-  # Example 4: Custom template
-  # custom = {
-  #   vm_name        = "custom-vm"
-  #   template_vm_id = 9001  # Different template
-  #   cores          = 2
-  #   memory         = 2048
-  # }
-
-  # Example 5: VM from cloud image (uncomment image download resource in main.tf)
-  # ubuntu_iso = {
-  #   vm_name          = "ubuntu-from-image"
-  #   template_vm_id   = null  # Don't clone
-  #   disk_import_from = "local:iso/jammy-server-cloudimg-amd64.img"
-  #   os_type          = "l26"
-  #   cores            = 2
-  #   memory           = 2048
-  #   tags             = ["ubuntu", "cloud-image"]
-  # }
 }
