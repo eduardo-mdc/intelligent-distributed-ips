@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Metrics Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            color: #60a5fa;
+            font-size: 2.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h2 {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            color: #94a3b8;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #60a5fa;
+            margin-bottom: 5px;
+        }
+
+        .metric-unit {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status.online {
+            background: #10b981;
+            color: #ffffff;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #334155;
+        }
+
+        .stats-row:last-child {
+            border-bottom: none;
+        }
+
+        .stats-label {
+            color: #94a3b8;
+        }
+
+        .stats-value {
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+
+        .error {
+            background: #7f1d1d;
+            color: #fca5a5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Network Metrics Dashboard</h1>
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div id="loading" class="loading">Loading metrics...</div>
+
+        <div id="dashboard" style="display: none;">
+            <div class="grid">
+                <div class="card">
+                    <h2>Total Bandwidth</h2>
+                    <div class="metric-value" id="bandwidth">0</div>
+                    <div class="metric-unit">Mbps</div>
+                </div>
+
+                <div class="card">
+                    <h2>Packets/Second</h2>
+                    <div class="metric-value" id="packets">0</div>
+                    <div class="metric-unit">pps</div>
+                </div>
+
+                <div class="card">
+                    <h2>TCP Traffic</h2>
+                    <div class="metric-value" id="tcp-bandwidth">0</div>
+                    <div class="metric-unit">Mbps</div>
+                </div>
+
+                <div class="card">
+                    <h2>HTTPS Traffic</h2>
+                    <div class="metric-value" id="https-bandwidth">0</div>
+                    <div class="metric-unit">Mbps</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Summary Statistics</h2>
+                <div class="stats-row">
+                    <span class="stats-label">Status</span>
+                    <span class="stats-value"><span class="status online">ONLINE</span></span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">Total Packets</span>
+                    <span class="stats-value" id="total-packets">0</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">Total Bytes</span>
+                    <span class="stats-value" id="total-bytes">0</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">HTTP Traffic</span>
+                    <span class="stats-value" id="http-percent">0%</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">HTTPS Traffic</span>
+                    <span class="stats-value" id="https-percent">0%</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">TCP Traffic</span>
+                    <span class="stats-value" id="tcp-percent">0%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '';
+
+        function formatNumber(num) {
+            if (num >= 1e9) return (num / 1e9).toFixed(2) + 'G';
+            if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
+            if (num >= 1e3) return (num / 1e3).toFixed(2) + 'K';
+            return num.toFixed(0);
+        }
+
+        function formatBytes(bytes) {
+            if (bytes >= 1e12) return (bytes / 1e12).toFixed(2) + ' TB';
+            if (bytes >= 1e9) return (bytes / 1e9).toFixed(2) + ' GB';
+            if (bytes >= 1e6) return (bytes / 1e6).toFixed(2) + ' MB';
+            if (bytes >= 1e3) return (bytes / 1e3).toFixed(2) + ' KB';
+            return bytes + ' B';
+        }
+
+        async function fetchMetrics() {
+            try {
+                const [realtimeRes, summaryRes] = await Promise.all([
+                    fetch(`${API_BASE}/api/metrics/realtime`),
+                    fetch(`${API_BASE}/api/stats/summary`)
+                ]);
+
+                if (!realtimeRes.ok || !summaryRes.ok) {
+                    throw new Error('Failed to fetch metrics');
+                }
+
+                const realtime = await realtimeRes.json();
+                const summary = await summaryRes.json();
+
+                // Update real-time metrics
+                document.getElementById('bandwidth').textContent = (realtime.bandwidth_bps / 1e6).toFixed(2);
+                document.getElementById('packets').textContent = formatNumber(realtime.packets_per_sec);
+                document.getElementById('tcp-bandwidth').textContent = (realtime.tcp_bandwidth_bps / 1e6).toFixed(2);
+                document.getElementById('https-bandwidth').textContent = (realtime.https_bandwidth_bps / 1e6).toFixed(2);
+
+                // Update summary stats
+                document.getElementById('total-packets').textContent = formatNumber(realtime.total_packets);
+                document.getElementById('total-bytes').textContent = formatBytes(realtime.total_bytes);
+                document.getElementById('http-percent').textContent = summary.http_percentage.toFixed(1) + '%';
+                document.getElementById('https-percent').textContent = summary.https_percentage.toFixed(1) + '%';
+                document.getElementById('tcp-percent').textContent = summary.tcp_percentage.toFixed(1) + '%';
+
+                // Hide loading, show dashboard
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                document.getElementById('error').style.display = 'none';
+
+            } catch (error) {
+                console.error('Error fetching metrics:', error);
+                document.getElementById('error').textContent = 'Error loading metrics: ' + error.message;
+                document.getElementById('error').style.display = 'block';
+            }
+        }
+
+        // Fetch metrics every 2 seconds
+        fetchMetrics();
+        setInterval(fetchMetrics, 2000);
+    </script>
+</body>
+</html>
