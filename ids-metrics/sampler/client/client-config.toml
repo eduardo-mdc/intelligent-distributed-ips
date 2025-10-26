@@ -1,0 +1,30 @@
+# Sampler Client Configuration File
+# This file defines default settings for the traffic generator
+# All settings can be overridden via CLI arguments
+
+[target]
+# Target server URL
+url = "http://httpbin.org"
+
+# Protocol: http or https
+protocol = "http"
+
+[traffic]
+# Target bandwidth (formats: 1MB/s, 10Mbps, 100KB/s)
+bandwidth = "100MB/s"
+
+# Number of concurrent connections/workers
+connections = 10
+
+# Size of each request payload (formats: 1KB, 10KB, 1MB)
+request_size = "1MB"
+
+# Artificial latency/delay between requests (formats: 100ms, 1s)
+latency = "0ms"
+
+[limits]
+# How long to run the test (formats: 30s, 5m, 1h, 0 for infinite)
+duration = "0s"
+
+# Total data to send (formats: 100MB, 1GB, 0 for infinite)
+total_size = "0"
