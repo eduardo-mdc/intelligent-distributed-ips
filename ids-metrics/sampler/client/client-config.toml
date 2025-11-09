@@ -14,7 +14,7 @@ protocol = "http"
 bandwidth = "100MB/s"
 
 # Number of concurrent connections/workers
-connections = 10
+connections = 23
 
 # Size of each request payload (formats: 1KB, 10KB, 1MB)
 request_size = "1MB"
