@@ -52,6 +52,13 @@ variable "default_ssh_keys" {
   default     = []
 }
 
+variable "default_cloud_init_password" {
+  description = "Default cloud-init password for console access"
+  type        = string
+  sensitive   = true
+  default     = null
+}
+
 # VM Configurations
 variable "vms" {
   description = "Map of VM configurations"

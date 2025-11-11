@@ -1,4 +1,4 @@
-# Cloud-init snippet for QEMU agent installation
+# Cloud-init snippet for QEMU agent installation and serial console auto-login
 resource "proxmox_virtual_environment_file" "cloud_init_user_data" {
   count = var.qemu_agent_enabled && var.cloud_init_user_data_file_id == null ? 1 : 0
 
@@ -9,12 +9,23 @@ resource "proxmox_virtual_environment_file" "cloud_init_user_data" {
   source_raw {
     data = <<-EOF
       #cloud-config
-      package_update: true
       packages:
         - qemu-guest-agent
       runcmd:
-        - systemctl enable qemu-guest-agent
-        - systemctl start qemu-guest-agent
+        - systemctl enable --now qemu-guest-agent
+        - mkdir -p /root/.ssh
+        - chmod 700 /root/.ssh
+        - |
+          cat >> /root/.ssh/authorized_keys <<'SSHKEY'
+          %{for key in var.ssh_keys~}
+          ${key}
+          %{endfor~}
+          SSHKEY
+        - chmod 600 /root/.ssh/authorized_keys
+        - mkdir -p /etc/systemd/system/serial-getty@ttyS0.service.d
+        - printf '[Service]\nExecStart=\nExecStart=-/sbin/agetty --autologin root --noclear %%I linux\n' > /etc/systemd/system/serial-getty@ttyS0.service.d/autologin.conf
+        - systemctl daemon-reload
+        - systemctl restart serial-getty@ttyS0.service
     EOF
 
     file_name = "cloud-init-${var.vm_name}.yaml"
@@ -96,6 +107,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
     }
 
     # Use custom user data file if provided, otherwise use auto-generated one for QEMU agent
+    # Note: When user_data_file_id is set, it supplements (not replaces) the user_account settings
     user_data_file_id = var.cloud_init_user_data_file_id != null ? var.cloud_init_user_data_file_id : (
       var.qemu_agent_enabled ? proxmox_virtual_environment_file.cloud_init_user_data[0].id : null
     )
@@ -108,6 +120,9 @@ resource "proxmox_virtual_environment_vm" "vm" {
   agent {
     enabled = var.qemu_agent_enabled
   }
+
+  # Serial console for Shell access in Proxmox UI
+  serial_device {}
 
   lifecycle {
     ignore_changes = [

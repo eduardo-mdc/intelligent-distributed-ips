@@ -35,10 +35,11 @@ module "proxmox_vms" {
   source = "./modules/proxmox"
 
   # Default settings for all VMs
-  default_target_node    = var.default_proxmox_node
-  default_template_vm_id = var.default_template_vm_id
-  default_ssh_keys       = var.default_ssh_keys
-  default_tags           = ["terraform", "proxmox", "vms"]
+  default_target_node         = var.default_proxmox_node
+  default_template_vm_id      = var.default_template_vm_id
+  default_ssh_keys            = var.default_ssh_keys
+  default_cloud_init_password = var.default_cloud_init_password
+  default_tags                = ["terraform", "proxmox", "vms"]
 
   # VM configurations
   vms = var.vms
