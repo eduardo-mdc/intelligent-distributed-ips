@@ -1,0 +1,9 @@
+# yaml
+---
+- name: Prepare control plane and worker nodes
+  hosts: kube_control_plane:kube_node
+  roles:
+    - k8s_node
+
+- name: Install Kubernetes
+  ansible.builtin.import_playbook: kubernetes_sigs.kubespray.cluster
