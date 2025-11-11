@@ -1,3 +1,5 @@
+# install with ansible-galaxy collection install -r ansible/requirements.yml
+
 collections:
 - name: https://github.com/kubernetes-sigs/kubespray
   type: git

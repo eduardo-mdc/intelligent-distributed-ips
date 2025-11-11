@@ -13,15 +13,15 @@ all:
       hosts:
         control-node1:
           ansible_host: 192.168.21.31
-          ip: 10.3.0.1
+          ip: 192.168.21.31
           etcd_member_name: etcd1
         control-node2:
           ansible_host: 192.168.21.32
-          ip: 10.3.0.2
+          ip: 192.168.21.32
           etcd_member_name: etcd2
         control-node3:
           ansible_host: 192.168.21.33
-          ip: 10.3.0.3
+          ip: 192.168.21.33
           etcd_member_name: etcd3
 
     etcd:
@@ -32,10 +32,10 @@ all:
       hosts:
         worker-node1:
           ansible_host: 192.168.21.21
-          ip: 10.3.0.4
+          ip: 192.168.21.21
         worker-node2:
           ansible_host: 192.168.21.22
-          ip: 10.3.0.5
+          ip: 192.168.21.22
         worker-node3:
           ansible_host: 192.168.21.23
-          ip: 10.3.0.6
+          ip: 192.168.21.23
